@@ -1,0 +1,52 @@
+body {
+    font-family: 'Microsoft YaHei', sans-serif;
+    background-color: #eeeeee;
+}
+.title {
+    padding-top: 50%;
+    font-size: 4em;
+    font-weight: 500;
+    /*color: #EE4B5E;*/
+    padding-bottom: 20px;
+}
+.not-found{
+    padding-top: 5%;
+}
+.not-login{
+    font-size: 25px;
+    font-weight: 500;
+    /*padding: 20px auto;*/
+}
+.subtitle {
+    font-size: 20px;
+    font-weight: 500;
+    color: #1FA9D6;
+}
+.buttons {
+    margin: 50px;
+}
+.buttons a.button {
+    font-weight: 500;
+    border: 2px solid #EE4B5E;
+    text-decoration: none;
+    padding: 15px;
+    text-transform: uppercase;
+    color: #EE4B5E;
+    border-radius: 5rem;
+    transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+}
+.buttons a.button:hover {
+    background-color: #EE4B5E;
+    color: white;
+    transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+}
+.return_back a{
+    color: white;
+    font-size: 40px;
+    left: 20px;
+    position: absolute;
+    top: 10%;
+
+}

@@ -1,0 +1,124 @@
+{% load order_by_id %}
+{% csrf_token %}
+<html>
+{% include 'poetry_head.html' %}
+<link rel="stylesheet" href="/static/article_content.css">
+{#<script src="/static/leaves.js"></script>#}
+<body>
+{% include 'poetry_header.html' %}
+<div id="leaf"></div>
+<div class="main">
+    <div class="playing">
+        <a id="an" class=""></a>
+        <a id="an_d" class=""></a>
+        <a id="an_d_d" class=""></a>
+    </div>
+    <div class="thumb">
+        <div>
+            <a id="music" class="ion-ios-musical-notes"></a>
+            <audio id="play">
+                <source src="/static/1.mp3">
+            </audio>
+        </div>
+        <div>
+            <a class="ion-android-favorite {% if content_love %} love {% endif %}"></a>
+        </div>
+    </div>
+    <h1>{{ cur_poetry.name }}</h1>
+    <div class="author">
+        <span>{{ cur_poetry.author_id.dynasty }} &bull; {{ cur_poetry.author_id.name }}</span>
+    </div>
+    <div class="context">
+        <pre>{{ cur_poetry.content }}</pre>
+    </div>
+    <div class="trans">
+        <h3>注释</h3>
+        <pre>{{ cur_poetry.fanyi }}</pre>
+    </div>
+    <div class="trans">
+        <h3>赏析</h3>
+        <pre>{{ cur_poetry.shangxi }}</pre>
+    </div>
+    <div class="trans">
+        <h3>关于</h3>
+        <pre>{{ cur_poetry.about }}</pre>
+    </div>
+</div>
+</body>
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = Zepto.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+    var login = false;
+    {% if request.user.is_authenticated %}
+        login = true;
+    {% endif %}
+    $('.ion-android-favorite').click(function () {
+        if (login) {
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '{% url "love" %}',
+                    data: {"poetry_id": {{ cur_poetry.id }}, 'csrfmiddlewaretoken': csrftoken},
+                    dataType: "text",
+                    success: function (data) {
+                        if (data === 'success') {
+                            $('.ion-android-favorite').addClass("love");
+                        } else if (data === 'del') {
+                            $('.ion-android-favorite').removeClass('love');
+                        }
+                    }
+                }
+            )
+        } else {
+            window.location.href = "{% url 'login' %}?next=" + window.location.pathname;
+        }
+    });
+
+
+    $('#music').click(function () {
+        var bg = $("#play");
+        var audio = bg[0];
+        if (bg.hasClass('play')) {
+            audio.pause();
+            bg.removeClass('play');
+            musicAniClear();
+        } else {
+            audio.play();
+            bg.addClass('play');
+            musicAni();
+        }
+
+    });
+    var musicAni = function () {
+        $("#an").addClass('an');
+        var timerFirst = setInterval(function () {
+            $("#an_d").addClass('an-d');
+            clearInterval(timerFirst);
+        }, 1000);
+        var timerSecond = setInterval(function () {
+            $("#an_d_d").addClass('an-d-d');
+            clearInterval(timerSecond);
+        }, 1500);
+    };
+    var musicAniClear = function () {
+        $("#an").removeClass("an");
+        $("#an_d").removeClass("an-d");
+        $("#an_d_d").removeClass("an-d-d");
+    };
+</script>
+</html>

@@ -1,0 +1,118 @@
+{% load order_by_id %}
+{% csrf_token %}
+{% if search_obj.count == 0 %}
+       {% include "error/search_not_found.html" %}
+{% else %}
+<html>
+{% include 'poetry_head.html' %}
+{#<script src="/static/iscroll-probe.js"></script>#}
+<script src="/static/mescroll.min.js"></script>
+<link rel="stylesheet" href="/static/mescroll.min.css">
+<script src="/static/poetry_search.js"></script>
+<body>
+{% include 'poetry_header.html' %}
+<div class="container mescroll" id="container">
+    <ul id="poetry">
+        {% for poe in search_obj %}
+            <li>
+                <a class="list" href="{% url 'poetry_content'  poe.id|user_des %}">
+                    <div class="flex">
+                        <div class="list-middle">
+                            <h3>{{ poe.name }}</h3>
+                            <h4>{{ poe.author_id.name }}&bull;{{ poe.dynasty }}</h4>
+                            <pre class="content pre-normal">
+                        {{ poe.content|truncatechars_html:36 }}
+                    </pre>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!--页面没有内容加载（我是有底线的）-->
+</body>
+</html>
+
+<script>
+var mescroll = new MeScroll("container", {
+        down: {
+            use: false,
+            scrollbar: {
+                use: false
+            }
+        },
+        up: {
+            use: true,
+            auto: false,
+            isBounce: false,
+            callback: searchPost,
+            noMoreSize: 1,
+            htmlNodata: '<p class="upwarp-nodata">-- 我是有底线的 --</p>',
+            empty: {
+                warpId:'container',
+                icon: null,
+                tip: "我是有底线的",
+                btntext: "",
+                btnClick: null
+            }
+
+        }
+    });
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = Zepto.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+    var scrollOK = true;
+    function searchPost() {
+        var pages = $("#poetry").find('li').length;
+        $.ajax(
+            {
+                type: 'POST',
+                url: document.location.href,
+                data: {"pages": pages, 'csrfmiddlewaretoken': csrftoken},
+                dataType: "html",
+                beforeSend: function () {
+                    var page_end = $("#page-end");
+                    page_end.empty();
+                    page_end.append("<div class=\"loader circle\"></div>");
+                },
+                error: function (data) {
+                    mescroll.endErr();
+                },
+                success: function (data) {
+                    if ($(data).find("div").length > 0) {
+                        $("#page-end").empty();
+                        $("#poetry").append(data);
+                        scrollOK = true;
+                        mescroll.endSuccess(data.length, true);
+                    } else {
+                        var page_end = $("#page-end");
+                        page_end.empty();
+                        page_end.addClass('list');
+                        page_end.append("<div class=\"page-end\">\n" +
+                            "            <h3>我是有底线的!</h3>\n" +
+                            "        </div>");
+                        scrollOK = true;
+                        mescroll.endSuccess(data.length, false);
+                    }
+                }
+            }
+        )
+    }
+</script>
+{% endif %}

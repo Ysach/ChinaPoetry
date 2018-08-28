@@ -1,0 +1,13 @@
+.my-search {
+    width: 100%;
+}
+.my-search li {
+    padding: 5px 0;
+}
+.my-search li a{
+    font-weight: 600;
+    color: #999999 !important;
+}
+body {
+    /*background-color: #AEDD81 !important;*/
+}

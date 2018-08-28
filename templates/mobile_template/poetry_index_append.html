@@ -1,0 +1,16 @@
+{% load order_by_id %}
+{% for poe in poetry %}
+        <li>
+            <a class="list" href="{% url 'poetry_content'  poe.id|user_des %}">
+                <div class="flex">
+                    <div class="list-middle">
+                        <h3>{{ poe.name }}</h3>
+                        <h4>{{ poe.author_id.name }}&bull;{{ poe.dynasty }}</h4>
+                        <pre class="content pre-normal">
+                    {{ poe.content|truncatechars_html:36 }}
+                </pre>
+                    </div>
+                </div>
+            </a>
+        </li>
+{% endfor %}

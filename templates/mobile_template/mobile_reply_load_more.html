@@ -1,0 +1,13 @@
+{% load order_by_id %}
+{% for comment in article_comment_obj %}
+        <li>
+            <p></p>
+            <p class="convert-emoji">{{ comment.content }}</p>
+            <p></p>
+            <div class="info">
+                <div class="avatar"><img src="{{ comment.user_info.image.url }}"></div>
+                <span class="author-name">{{ comment.user_info.nickname }}</span>
+                <span class="time">{{ comment.ctime|age }}</span>
+            </div>
+        </li>
+{% endfor %}

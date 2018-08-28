@@ -1,0 +1,102 @@
+{% load order_by_id %}
+{% csrf_token %}
+{% if request.user.is_authenticated %}
+<html>
+{% include 'poetry_head.html' %}
+<body>
+{% include 'poetry_header.html' %}
+<div class="container" id="container">
+    <ul id="poetry">
+        {% for poe in poetry %}
+        <li>
+            <a class="list" href="{% url 'poetry_content'  poe.id|user_des%}">
+               <div class="flex">
+                <div class="list-middle">
+                    <h3>{{ poe.name }}</h3>
+                    <h4>{{ poe.author_id.name }}&bull;{{ poe.dynasty }}</h4>
+                    <pre class="content pre-normal">
+                        {{ poe.content|truncatechars_html:36 }}
+                    </pre>
+                </div>
+            </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="page" id="page-end">
+
+    </div>
+</div>
+
+<!--页面没有内容加载（我是有底线的）-->
+</body>
+</html>
+
+<script>
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = Zepto.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+$(function(){
+  $(window).scroll(function(){
+        var scrollTop = 0;
+        if (typeof window.pageYOffset !== 'undefined'){
+            scrollTop = window.pageYOffset;
+        }
+        else if (typeof document.compatMode !== 'undefined' && document.compatMode !== 'BackCompat'){
+            scrollTop = document.documentElement.scrollTop;
+        }
+        else if (typeof document.body !== 'undefined'){
+            scrollTop = document.body.scrollTop;
+        }
+        var scrollHeight = $(document).height();
+        var windowHeight = $(this).height();
+        if (scrollTop + windowHeight >= scrollHeight) {
+            var pages = $("#poetry").find('li').length;
+            // 滚条到底部
+            $.ajax(
+            {
+                type: 'POST',
+                url: '{% url "index" %}',
+                data: {"pages": pages, 'csrfmiddlewaretoken': csrftoken},
+                dataType: "html",
+                beforeSend: function () {
+                    var page_end = $("#page-end");
+                    page_end.empty();
+                    page_end.append("<div class=\"loader circle\"></div>");
+                },
+                success: function (data) {
+                   if($(data).find("div").length > 0){
+                       $("#page-end").empty();
+                       $("#poetry").append(data);
+                   }else {
+                       var page_end = $("#page-end");
+                       page_end.empty();
+                       page_end.addClass('list');
+                       page_end.append("<div class=\"page-end\">\n" +
+                           "            <h3>我是有底线的!</h3>\n" +
+                           "        </div>");
+                   }
+                }
+            }
+        )
+        }
+    });
+});
+</script>
+{% else %}
+        {% include 'error/love_not_login.html' %}
+{% endif %}

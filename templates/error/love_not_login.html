@@ -1,0 +1,22 @@
+{% load order_by_id %}
+{% csrf_token %}
+<html>
+{% include 'poetry_head.html' %}
+<link rel="stylesheet" href="/static/error.css">
+<body>
+<div id="container" style="text-align: center">
+    <div class="return_back">
+        <a href="{% url 'index' %}" class="ion-ios-undo"></a>
+    </div>
+    <div class="title not-login">
+        您还没有登录！
+    </div>
+    <div class="subtitle">
+        请登录后查看您喜欢的诗词！
+    </div>
+    <div class="buttons">
+        <a class="button" href="{% url 'login' %}?next={% url 'love' %}">点此登录</a>
+    </div>
+</div>
+</body>
+</html>

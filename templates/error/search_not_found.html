@@ -1,0 +1,20 @@
+{% load order_by_id %}
+{% csrf_token %}
+<html>
+{% include 'poetry_head.html' %}
+<link rel="stylesheet" href="/static/error.css">
+<body>
+{#{% include 'poetry_header.html' %}#}
+<div class="container" id="container" style="text-align: center">
+    <div class="title not-login">
+        抱歉
+    </div>
+    <div class="subtitle">
+        没有找到您所查找的内容
+    </div>
+    <div class="buttons">
+        <a class="button" href="{% url 'search_home' %}">返回搜索</a>
+    </div>
+</div>
+</body>
+</html>

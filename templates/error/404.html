@@ -1,0 +1,20 @@
+{% load order_by_id %}
+{% csrf_token %}
+<html>
+{% include 'poetry_head.html' %}
+<link rel="stylesheet" href="/static/error.css">
+<body>
+{#{% include 'poetry_header.html' %}#}
+<div class="container" id="container" style="text-align: center">
+    <div class="title" data-content="500">
+        404
+    </div>
+    <div class="subtitle">
+        您所请求的页面不存在！
+    </div>
+    <div class="buttons">
+        <a class="button" href="{% url 'index' %}">返回主页</a>
+    </div>
+</div>
+</body>
+</html>

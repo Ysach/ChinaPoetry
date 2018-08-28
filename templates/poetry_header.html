@@ -1,0 +1,32 @@
+<div class="nav" id="nav">
+    <div>
+        <a href="{% url 'index' %}" class="ion-ios-home"
+                {% if home %}
+           style="color: #2ab3f6"
+                {% elif content %}
+           style="color: green"
+                {% endif %}
+        >
+            <p>主页</p>
+        </a>
+        <a href="{% url 'search_home' %}" class="ion-ios-search"
+           {% if search %}style="color: #2ab3f6"
+           {% elif search_content %} style="color: darkcyan"
+           {% endif %}
+        >
+            <p style="">搜索</p>
+        </a>
+        <a href="{% url 'love' %}" class="ion-ios-heart" {% if love %}style="color: #ff000080"{% endif %}>
+            <p style="">喜欢</p>
+        </a>
+        <a href="{% url 'mine' %}" class="ion-ios-person" {% if mine %}style="color: #96d29e"{% endif %}>
+            <p style="">我的</p>
+        </a>
+        <!--a href="{% url 'mine' %}" class="ion-ios-rose-outline" {% if mine %}style="color: red"{% endif %}>
+            <p style="">打赏</p>
+        </a-->
+    </div>
+
+</div>
+
+<div class="side-menu" id="side-menu"></div>

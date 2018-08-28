@@ -1,0 +1,17 @@
+{% load order_by_id %}
+{% for mobile in mobiles %}
+    <a class="list" href="#">
+        <div class="list-top">{{ mobile.ctime|age }}</div>
+        <div class="flex">
+            <div class="list-middle">
+                <h3>{{ mobile.title }}</h3>
+                <p class="clamp2">
+                    {{ mobile.content_summary|truncatechars_html:36}}
+                </p>
+            </div>
+            {% if mobile.img %}
+            <div class="list-right"><img src="/upload/{{ mobile.img }}"></div>
+            {% endif %}
+        </div>
+    </a>
+{% endfor %}

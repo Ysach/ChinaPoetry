@@ -1,0 +1,53 @@
+{% load order_by_id %}
+{% csrf_token %}
+<html>
+<link rel="stylesheet" href="/static/mobile_search.css">
+{% include 'poetry_head.html' %}
+<body>
+{% include 'poetry_header.html' %}
+<div class="main">
+    <div class="search_div">
+        <form id="search" method="get" action="{% url 'search' %}">
+            <input id="search_content" type="text" placeholder="请输入您要查找的内容" name="content">
+            <a type="submit" id="a-form">
+                <img src="/static/img/search-1.png" alt="搜索">
+            </a>
+        </form>
+    </div>
+    <div class="hot-search">
+        <h3>热门搜索</h3>
+    </div>
+    <ul class="clearFix my-search">
+        {% for au in author %}
+        <li>
+            <a href="{% url 'search' %}?author={{ au.name }}">{{ au.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <ul class="clearFix my-search">
+        {% for ty in poetry_type %}
+        <li>
+            <a href="{% url 'search' %}?type={{ ty.type }}">{{ ty.type }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <ul class="clearFix my-search">
+        {% for dy in dynasty %}
+        <li>
+            <a href="{% url 'search' %}?dynasty={{ dy.dynasty }}">{{ dy.dynasty }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!--页面没有内容加载（我是有底线的）-->
+<div class="" id="page-end">
+</div>
+<script>
+    $('#a-form').click(function () {
+        {#var vl = $("#search_content").val().trim();#}
+        document.getElementById('search').submit();
+    })
+</script>
+</body>
+</html>
